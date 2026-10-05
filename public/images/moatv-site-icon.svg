@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title>MOATV site icon</title>
+  <rect width="512" height="512" rx="96" fill="#111111"/>
+  <path
+    fill="#f4c400"
+    d="M104 376V136h70l82 118 82-118h70v240h-70V246l-62 88h-40l-62-88v130h-70z"
+  />
+</svg>
