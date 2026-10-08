@@ -20,15 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     route: `/blog/${article.slug}`,
     lastModified: new Date(article.updatedAt),
   }));
-  const staticLastModified = new Date("2026-10-04");
 
   return [
-    ...staticRoutes.map((route) => ({
-      route,
-      lastModified: staticLastModified,
-    })),
+    ...staticRoutes.map((route) => ({ route })),
     ...blogRoutes,
-  ].map(({ route, lastModified }) => ({
+  ].map(({ route, lastModified }: { route: string; lastModified?: Date }) => ({
     url: getSiteUrl(route),
     lastModified,
     changeFrequency: route === "/" ? "weekly" : "monthly",

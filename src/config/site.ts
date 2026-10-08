@@ -3,7 +3,7 @@ export const siteConfig = {
   seoName: "moatv IPTV",
   description:
     "moatv IPTV helps customers compare plans, confirm compatible devices, follow setup guidance, and review support details before ordering.",
-  productionDomain: "https://moatv.us",
+  productionDomain: "https://www.moatv4k.net",
   defaultLocale: "en_US",
   contact: {
     email: "",
