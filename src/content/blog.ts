@@ -23,6 +23,7 @@ export type BlogBlock =
   | { type: "p"; text: string }
   | { type: "h3"; text: string }
   | { type: "ul"; items: string[] }
+  | { type: "links"; items: BlogRelatedLink[] }
   | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "image"; image: BlogImage };
 

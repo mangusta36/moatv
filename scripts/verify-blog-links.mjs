@@ -4,7 +4,8 @@ const routes = new Set(['/', '/pricing', '/channels', '/faq', '/blog', '/reselle
 for (const article of data.articles) routes.add(`/blog/${article.slug}`);
 const missing = [];
 for (const article of data.articles) {
-  for (const link of article.relatedLinks || []) {
+  const contextual = article.sections.flatMap((section) => section.body.filter((block) => block.type === 'links').flatMap((block) => block.items));
+  for (const link of [...(article.relatedLinks || []), ...contextual]) {
     if (link.href.startsWith('/') && !routes.has(link.href)) missing.push(`${article.slug} -> ${link.href}`);
   }
 }

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { ButtonLink } from "@/components/ButtonLink";
 import { DeviceGrid, FAQList, FinalCTA, InstallOverview } from "@/components/Sections";
 import { PricingSelector } from "@/components/PricingSelector";
 import { JsonLd } from "@/components/JsonLd";
-import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { faqs } from "@/content/shared";
+import { breadcrumbJsonLd, faqPageJsonLd, pageMetadata } from "@/lib/seo";
 import { createWhatsAppUrl, getWhatsAppHref, whatsappMessages } from "@/lib/whatsapp";
 
 export const metadata: Metadata = pageMetadata({
@@ -39,10 +41,12 @@ const homeSteps = [
 export default function HomePage() {
   const freeTrialHref = getWhatsAppHref(whatsappMessages.freeTrial);
   const freeTrialTarget = createWhatsAppUrl(whatsappMessages.freeTrial) ? "_blank" : undefined;
+  const homepageFaqs = faqs.slice(0, 5);
 
   return (
     <>
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }])} />
+      <JsonLd data={faqPageJsonLd(homepageFaqs)} />
 
       <section className="relative min-h-[560px] overflow-hidden border-b border-line bg-cream sm:min-h-[640px] lg:min-h-[700px]">
         <Image
@@ -111,6 +115,35 @@ export default function HomePage() {
       <section id="pricing" className="bg-paper py-14 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <PricingSelector />
+        </div>
+      </section>
+
+      <section className="bg-cream py-14 sm:py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
+          <div>
+            <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">What to Know Before Choosing a MoaTV Plan</h2>
+            <p className="mt-4 text-base leading-7 text-muted">
+              A good moatv setup starts with the plan term, the number of screens, and the player app your main device can use.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {[
+              ["Plan selection", "Choose the duration and device count shown in the pricing selector before sending your order request."],
+              ["Setup format", "moatv setup guidance references Xtream Codes API, M3U playlist, and portal-style login formats."],
+              ["Device fit", "Confirm your Fire TV, Android TV, smart TV, Apple TV, phone, tablet, or computer can use a suitable player app."],
+              ["Support and policies", "Use the FAQ, device guide, and refund policy pages to review practical details before you purchase."],
+            ].map(([title, text]) => (
+              <div key={title} className="border-t border-line pt-5">
+                <h3 className="font-semibold text-ink">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-muted">{text}</p>
+              </div>
+            ))}
+            <div className="flex flex-wrap gap-4 pt-2 text-sm sm:col-span-2">
+              <Link className="font-semibold text-brand-700 hover:underline" href="/channels">Review devices</Link>
+              <Link className="font-semibold text-brand-700 hover:underline" href="/faq">Read FAQ</Link>
+              <Link className="font-semibold text-brand-700 hover:underline" href="/refund">Review refund policy</Link>
+            </div>
+          </div>
         </div>
       </section>
 

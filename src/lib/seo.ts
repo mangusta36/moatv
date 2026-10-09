@@ -6,12 +6,21 @@ type MetaInput = {
   description: string;
   path: string;
   image?: string;
+  imageAlt?: string;
   type?: "website" | "article";
 };
 
-export function pageMetadata({ title, description, path, image = "/images/moatv-hero.webp", type = "website" }: MetaInput): Metadata {
+export function pageMetadata({
+  title,
+  description,
+  path,
+  image = "/images/moatv-hero.webp",
+  imageAlt,
+  type = "website",
+}: MetaInput): Metadata {
   const url = getSiteUrl(path);
   const fullTitle = title.toLowerCase().includes(siteConfig.name.toLowerCase()) ? title : `${title} | ${siteConfig.name}`;
+  const alt = imageAlt ?? `${fullTitle} preview image`;
 
   return {
     title,
@@ -26,7 +35,7 @@ export function pageMetadata({ title, description, path, image = "/images/moatv-
       siteName: siteConfig.name,
       locale: siteConfig.defaultLocale,
       type,
-      images: [{ url: getSiteUrl(image), width: 1200, height: 630, alt: "moatv streaming interface" }],
+      images: [{ url: getSiteUrl(image), width: 1200, height: 630, alt }],
     },
     twitter: {
       card: "summary_large_image",
@@ -66,6 +75,18 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: siteConfig.publisher.name,
     url: getSiteUrl("/"),
-    email: siteConfig.contact.email,
+    ...(siteConfig.contact.email ? { email: siteConfig.contact.email } : {}),
+  };
+}
+
+export function faqPageJsonLd(items: Array<{ question: string; answer: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
   };
 }

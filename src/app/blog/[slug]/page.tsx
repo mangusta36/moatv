@@ -7,7 +7,7 @@ import { ButtonLink } from "@/components/ButtonLink";
 import { JsonLd } from "@/components/JsonLd";
 import { blogArticles, getArticle, type BlogBlock, type BlogImage } from "@/content/blog";
 import { getSiteUrl, siteConfig } from "@/config/site";
-import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, faqPageJsonLd, pageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return blogArticles.map((article) => ({ slug: article.slug }));
@@ -75,6 +75,18 @@ function renderBlock(block: BlogBlock, index: number) {
     return <ArticleImage key={index} image={block.image} />;
   }
 
+  if (block.type === "links") {
+    return (
+      <ul key={index} className="mt-4 list-disc space-y-2 pl-5 text-base leading-7">
+        {block.items.map((item) => (
+          <li key={item.href}>
+            <Link href={item.href} className="font-semibold text-brand-700 hover:underline">{item.label}</Link>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
   return (
     <div key={index} className="mt-6 overflow-x-auto rounded-lg border border-line bg-white">
       <table className="min-w-full border-collapse text-left text-sm">
@@ -101,6 +113,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
   if (!article) notFound();
 
   const relatedLinks = article.relatedLinks ?? [];
+  const contentSections = article.sections.filter((section) => section.heading.trim().toLowerCase() !== "faq");
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -115,17 +128,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
     mainEntityOfPage: getSiteUrl(`/blog/${article.slug}`),
   };
 
-  const faqJsonLd = article.faq?.length
-    ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: article.faq.map((item) => ({
-          "@type": "Question",
-          name: item.question,
-          acceptedAnswer: { "@type": "Answer", text: item.answer },
-        })),
-      }
-    : null;
+  const faqJsonLd = article.faq?.length ? faqPageJsonLd(article.faq) : null;
 
   return (
     <>
@@ -165,7 +168,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
             <nav aria-label="Table of contents" className="h-fit border-l border-line pl-4 text-sm lg:sticky lg:top-24">
               <h2 className="font-semibold text-ink">Contents</h2>
               <ol className="mt-3 space-y-2">
-                {article.sections.map((sec) => (
+                {contentSections.map((sec) => (
                   <li key={sec.id}><a className="text-muted transition hover:text-brand-700" href={`#${sec.id}`}>{sec.heading}</a></li>
                 ))}
                 {Boolean(article.faq?.length) && <li><a className="text-muted transition hover:text-brand-700" href="#faq">FAQ</a></li>}
@@ -176,7 +179,7 @@ export default async function BlogArticlePage({ params }: { params: Promise<{ sl
             <div className="max-w-3xl space-y-10">
               {article.intro?.map((para) => <p key={para} className="text-base leading-8 text-ink-secondary">{para}</p>)}
 
-              {article.sections.map((sec) => (
+              {contentSections.map((sec) => (
                 <section key={sec.id} id={sec.id} className="scroll-mt-28">
                   <h2 className="text-2xl font-semibold tracking-tight text-ink">{sec.heading}</h2>
                   {sec.body.map(renderBlock)}

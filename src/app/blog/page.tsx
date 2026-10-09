@@ -55,9 +55,9 @@ export default function BlogIndexPage() {
                   <p className="mt-1">{article.updatedAt}</p>
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-ink">
+                  <h3 className="text-xl font-semibold text-ink">
                     <Link href={`/blog/${article.slug}`} className="hover:text-brand-700">{article.title}</Link>
-                  </h2>
+                  </h3>
                   <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">{article.description}</p>
                 </div>
                 <Link href={`/blog/${article.slug}`} className="text-sm font-semibold text-brand-700 hover:underline md:pt-1">Read</Link>
